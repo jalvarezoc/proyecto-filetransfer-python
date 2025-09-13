@@ -2,22 +2,22 @@
     {
         "modalidad": "INTERNO",
         "cantidad_usuarios": "1",
-        "nombre_mvp": "dsfds",
-        "nombre_empresa": "sdfds",
-        "formato_directorio": "{\r\n      \"name\" : \"RN_ZGAFII03_IN_01_INT-08\",\r\n      \"ruleStatus\" : \"Enabled\",\r\n      \"comments\" : \"REGLA DEL FTGAFII03 RP A MAINF INT-08 SALDOS106\",\r\n      \"lastModified\" : \"2025-06-25T16:46:02.203064881Z\",\r\n      \"procName\" : \"INTERNO_CD_2S_GAFI.cd\",\r\n      \"procArgs\" : \"&F1=%FA_FILE_FOUND. &A1=%FA_NOT_PATH. &FT=FTGAFII03 &C1=GAFI &C2=IN\",\r\n      \"matchCriterion\" : {\r\n        \"criteriaList\" : [ {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILENAME\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30/SALDOS106_LO_D.TXT\"\r\n        }, {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILEPATH\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30\"\r\n        } ]\r\n      }\r\n    }, {\r\n      \"name\" : \"RN_ZGAFII03_IN_02_INT-08\",\r\n      \"ruleStatus\" : \"Enabled\",\r\n      \"comments\" : \"REGLA DEL FTGAFII03 RP A MAINF INT-08 SALDOS106 CRTL\",\r\n      \"lastModified\" : \"2025-06-25T16:46:56.712260688Z\",\r\n      \"procName\" : \"INTERNO_CD_2S_GAFI.cd\",\r\n      \"procArgs\" : \"&F1=%FA_FILE_FOUND. &A1=%FA_NOT_PATH. &FT=FTGAFII03 &C1=GAFI &C2=IN\",\r\n      \"matchCriterion\" : {\r\n        \"criteriaList\" : [ {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILENAME\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30/SALDOS106_LO_D_CTRL.TXT\"\r\n        }, {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILEPATH\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30\"\r\n        } ]\r\n      }\r\n    },\r\n",
-        "formato_reglas": "{\r\n      \"name\" : \"RN_ZGAFII03_IN_01_INT-08\",\r\n      \"ruleStatus\" : \"Enabled\",\r\n      \"comments\" : \"REGLA DEL FTGAFII03 RP A MAINF INT-08 SALDOS106\",\r\n      \"lastModified\" : \"2025-06-25T16:46:02.203064881Z\",\r\n      \"procName\" : \"INTERNO_CD_2S_GAFI.cd\",\r\n      \"procArgs\" : \"&F1=%FA_FILE_FOUND. &A1=%FA_NOT_PATH. &FT=FTGAFII03 &C1=GAFI &C2=IN\",\r\n      \"matchCriterion\" : {\r\n        \"criteriaList\" : [ {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILENAME\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30/SALDOS106_LO_D.TXT\"\r\n        }, {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILEPATH\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30\"\r\n        } ]\r\n      }\r\n    }, {\r\n      \"name\" : \"RN_ZGAFII03_IN_02_INT-08\",\r\n      \"ruleStatus\" : \"Enabled\",\r\n      \"comments\" : \"REGLA DEL FTGAFII03 RP A MAINF INT-08 SALDOS106 CRTL\",\r\n      \"lastModified\" : \"2025-06-25T16:46:56.712260688Z\",\r\n      \"procName\" : \"INTERNO_CD_2S_GAFI.cd\",\r\n      \"procArgs\" : \"&F1=%FA_FILE_FOUND. &A1=%FA_NOT_PATH. &FT=FTGAFII03 &C1=GAFI &C2=IN\",\r\n      \"matchCriterion\" : {\r\n        \"criteriaList\" : [ {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILENAME\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30/SALDOS106_LO_D_CTRL.TXT\"\r\n        }, {\r\n          \"enabled\" : true,\r\n          \"operator\" : \"MATCH\",\r\n          \"field\" : \"WATCH_FILEPATH\",\r\n          \"compareString\" : \"/xcom_rep/GAFI/salida/30\"\r\n        } ]\r\n      }\r\n    },\r\n",
+        "nombre_mvp": "dsf",
+        "nombre_empresa": "dsf",
+        "formato_directorio": "dsfsd",
+        "formato_reglas": "dsfds",
         "ambientes": [
             {
-                "ambiente": "Certificacion",
-                "sender_code": "dsfdsf",
+                "ambiente": "Produccion",
+                "sender_code": "dfs",
                 "receiver_code": "dsfds",
-                "description": "fsdfds",
-                "text1": "dsfds",
+                "description": "dsfds",
+                "text1": "dsfsd",
                 "text2": "dsfds",
                 "text6": "sdfds",
-                "text7": "sdfds"
+                "text7": "dsfds"
             }
         ],
-        "fecha_creacion": "12/09/2025 23:02"
+        "fecha_creacion": "12/09/2025 23:15"
     }
 ]
