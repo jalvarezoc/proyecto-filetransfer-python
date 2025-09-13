@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentos {{ tipo }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .generator-section {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-left: 4px solid #e63946;
+    }
+    .form-section {
+      margin-bottom: 15px;
+    }
+    .btn-generate {
+      background-color: #e63946;
+      color: white;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+    }
+    .btn-generate:hover {
+      background-color: #c1121f;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h2 class="mb-4">Documentos {{ tipo }}</h2>
+
+    <!-- Sección para generar documentos Sterling -->
+    <div class="generator-section mb-4">
+      <!-- <h4>Generar Documentos para Pases Sterling</h4> -->
+      
+      <form id="sterlingForm">
+        <!-- Configuración Inicial -->
+        <div class="form-section">
+          <h5>Configuración Inicial</h5>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Elige Tipo de Documento:</label>
+              <select class="form-select" name="tipo_documento" required>
+                <option value="">Seleccionar...</option>
+                <option value="SERVIDOR">SERVIDOR</option>
+                <option value="RENOVACION">RENOVACION</option>
+                <option value="PGP">PGP</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Elige Cantidad Usuario:</label>
+              <input type="number" class="form-control" name="cantidad_usuario" min="1" max="10" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de la Empresa, MVP y Certificados -->
+        <div class="form-section">
+          <h5>Datos de la Empresa, MVP y Certificados</h5>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre MVP:</label>
+              <input type="text" class="form-control" name="nombre_mvp" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nombre Empresa 1:</label>
+              <input type="text" class="form-control" name="nombre_empresa" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre Usuario FT 1:</label>
+              <input type="text" class="form-control" name="nombre_usuario" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nombre Certificado 1:</label>
+              <input type="text" class="form-control" name="nombre_certificado" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de Renovación de Certificados -->
+        <div class="form-section">
+          <h5>Datos de Renovación de Certificados</h5>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Vencimiento certificado:</label>
+              <input type="date" class="form-control" name="fecha_vencimiento" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Vencimiento certificado anterior:</label>
+              <input type="date" class="form-control" name="fecha_vencimiento_anterior" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Commit:</label>
+              <input type="text" class="form-control" name="commit" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ruta en bitbucket:</label>
+              <input type="text" class="form-control" name="ruta_bitbucket" required>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-generate">Generar Documentos</button>
+      </form>
+    </div>
+
+    <!-- Subir nuevo documento -->
+    <!-- <form action="{{ url_for('upload', categoria=tipo.lower()) }}" method="post" enctype="multipart/form-data" class="mb-4">
+      <div class="input-group">
+        <input type="file" name="file" class="form-control" required>
+        <button class="btn btn-danger" type="submit">Subir</button>
+      </div>
+    </form> -->
+
+    <!-- Lista de documentos -->
+    <!-- <div class="row g-4">
+      {% for doc in documentos %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ doc.nombre }}</h5>
+            <p class="card-text">
+              <strong>Última modificación:</strong> {{ doc.fecha_modificacion }}<br>
+              <strong>Tamaño:</strong> {{ doc.tamano }}
+            </p>
+            <a href="{{ url_for('documento', categoria=doc.categoria, doc_id=doc.id) }}" class="btn btn-outline-danger btn-sm">Ver</a>
+            <a href="{{ url_for('download', categoria=doc.categoria, filename=doc.id) }}" class="btn btn-danger btn-sm">Descargar</a>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p>No hay documentos en esta categoría.</p>
+      {% endfor %}
+    </div> -->
+
+    <div class="mt-4">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al menú principal</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('sterlingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Aquí recopilarías los datos del formulario
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      
+      // En una implementación real, enviarías estos datos al servidor
+      // para generar los documentos. Por ahora, simulamos la generación
+      alert('Documentos generados con éxito. En una implementación real, se descargarían automáticamente.');
+      
+      // Simulación de descarga (en una implementación real, esto se haría desde el servidor)
+      console.log('Datos para generar documentos:', data);
+      
+      // En una implementación real, aquí harías:
+      // fetch('/generate-sterling-docs', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data)
+      // })
+      // .then(response => response.blob())
+      // .then(blob => {
+      //   const url = window.URL.createObjectURL(blob);
+      //   const a = document.createElement('a');
+      //   a.style.display = 'none';
+      //   a.href = url;
+      //   a.download = 'documentos_sterling.zip';
+      //   document.body.appendChild(a);
+      //   a.click();
+      //   window.URL.revokeObjectURL(url);
+      // });
+    });
+  </script>
+</body>
+</html>

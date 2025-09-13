@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Vertical</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --menu-width: 280px;
+            --menu-collapsed-width: 80px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7f9;
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Menú Vertical */
+        .vertical-menu {
+            width: var(--menu-width);
+            background: linear-gradient(to bottom, var(--primary-color), #1a2530);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-header {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .menu-header h2 i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .menu-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-item {
+            margin: 5px 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            padding: 0.9rem 1rem !important;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        
+        .nav-link i {
+            width: 25px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+            transition: margin-right 0.3s ease;
+        }
+        
+        .nav-link span {
+            transition: opacity 0.3s ease;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .submenu.show {
+            max-height: 500px;
+        }
+        
+        .submenu .nav-link {
+            padding-left: 2.5rem !important;
+            font-size: 0.95rem;
+        }
+        
+        .dropdown-toggle::after {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-toggle[aria-expanded="true"]::after {
+            transform: rotate(90deg);
+        }
+        
+        .menu-footer {
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        /* Contenido principal */
+        .main-content {
+            flex: 1;
+            margin-left: var(--menu-width);
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.7rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        
+        .section-icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        /* Botón para colapsar menú */
+        .menu-toggle {
+            position: fixed;
+            top: 1rem;
+            left: calc(var(--menu-width) - 30px);
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        
+        /* Estilos para menú colapsado */
+        body.menu-collapsed .vertical-menu {
+            width: var(--menu-collapsed-width);
+        }
+        
+        body.menu-collapsed .main-content {
+            margin-left: var(--menu-collapsed-width);
+        }
+        
+        body.menu-collapsed .menu-toggle {
+            left: calc(var(--menu-collapsed-width) - 15px);
+        }
+        
+        body.menu-collapsed .nav-link span,
+        body.menu-collapsed .menu-header h2 span,
+        body.menu-collapsed .dropdown-toggle::after {
+            opacity: 0;
+            display: none;
+        }
+        
+        body.menu-collapsed .nav-link i {
+            margin-right: 0;
+        }
+        
+        body.menu-collapsed .menu-header {
+            padding: 1.5rem 0.5rem;
+        }
+        
+        body.menu-collapsed .nav-link {
+            padding: 1rem !important;
+            justify-content: center;
+        }
+        
+        body.menu-collapsed .submenu .nav-link {
+            padding-left: 1rem !important;
+        }
+        
+        /* Estilos para el formulario SAP */
+        .sap-form {
+            display: none;
+        }
+        
+        .sap-form.active {
+            display: block;
+        }
+        
+        .form-card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: none;
+            margin-bottom: 2rem;
+        }
+        
+        .form-card .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        .btn-sap {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-sap:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+        }
+        
+        .form-label {
+            font-weight: 500;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .vertical-menu {
+                transform: translateX(-100%);
+                width: var(--menu-width);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                left: 1rem;
+            }
+            
+            body.menu-active .vertical-menu {
+                transform: translateX(0);
+            }
+            
+            body.menu-active .main-content {
+                margin-left: 0;
+            }
+            
+            body.menu-collapsed .vertical-menu {
+                width: var(--menu-width);
+                transform: translateX(-100%);
+            }
+            
+            body.menu-collapsed .nav-link span,
+            body.menu-collapsed .menu-header h2 span,
+            body.menu-collapsed .dropdown-toggle::after {
+                opacity: 1;
+                display: inline;
+            }
+            
+            body.menu-collapsed .nav-link i {
+                margin-right: 12px;
+            }
+            
+            body.menu-collapsed .nav-link {
+                padding: 0.9rem 1rem !important;
+                justify-content: flex-start;
+            }
+            
+            body.menu-collapsed .submenu .nav-link {
+                padding-left: 2.5rem !important;
+            }
+            
+            body.menu-collapsed .menu-header {
+                padding: 1.5rem 1rem;
+            }
+        }
+        
+        .badge-new {
+            background: var(--accent-color);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            margin-left: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú Vertical -->
+    <div class="vertical-menu">
+        <div class="menu-header">
+            <h2><i class="fas fa-project-diagram"></i> <span>MiSistema</span></h2>
+        </div>
+        
+        <nav class="menu-nav">
+            <div class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection('inicio')">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+            </div>
+            
+            <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#migracionesSubmenu">
+                    <i class="fas fa-database"></i>
+                    <span>Migraciones</span>
+                </a>
+                <div class="submenu collapse" id="migracionesSubmenu">
+                    <a href="#" class="nav-link" onclick="showSection('sap-form')">PROYECTO SAP</a>
+                    <a href="#" class="nav-link">Historial</a>
+                    <a href="#" class="nav-link">Programar</a>
+                    <a href="#" class="nav-link">Configuración</a>
+                </div>
+            </div>
+            
+            <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#afiliacionesSubmenu">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Nuevas Afiliaciones</span>
+                    <span class="badge-new">Nuevo</span>
+                </a>
+                <div class="submenu collapse" id="afiliacionesSubmenu">
+                    <a href="#" class="nav-link">Solicitar Afiliación</a>
+                    <a href="#" class="nav-link">Estado</a>
+                    <a href="#" class="nav-link">Requisitos</a>
+                </div>
+            </div>
+            
+            <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#otrosSubmenu">
+                    <i class="fas fa-th"></i>
+                    <span>Otros</span>
+                </a>
+                <div class="submenu collapse" id="otrosSubmenu">
+                    <a href="#" class="nav-link">Configuración</a>
+                    <a href="#" class="nav-link">Reportes</a>
+                    <a href="#" class="nav-link">Ayuda</a>
+                    <a href="#" class="nav-link">Contacto</a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="menu-footer">
+            <small>© 2023 MiSistema v1.0</small>
+        </div>
+    </div>
+    
+    <!-- Botón para colapsar menú -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <!-- Sección de Inicio -->
+        <div id="inicio" class="content-section">
+            <h2 class="section-title"><i class="fas fa-home section-icon"></i> Panel Principal</h2>
+            <p>Bienvenido al sistema de gestión. Utilice el menú lateral para navegar entre las diferentes secciones.</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Seleccione una opción del menú lateral para comenzar.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="content-section">
+                        <h3 class="section-title">Accesos Rápidos</h3>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fas fa-database me-2"></i> Últimas Migraciones
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fas fa-user-plus me-2"></i> Solicitudes Pendientes
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fas fa-chart-bar me-2"></i> Reportes Estadísticos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="content-section">
+                        <h3 class="section-title">Notificaciones</h3>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Tiene 3 solicitudes de afiliación pendientes de revisión.
+                        </div>
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> La última migración se completó exitosamente.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h3 class="section-title">Resumen de Actividad</h3>
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <i class="fas fa-database fa-2x text-primary mb-2"></i>
+                                <h5>12</h5>
+                                <p class="card-text">Migraciones</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <i class="fas fa-users fa-2x text-success mb-2"></i>
+                                <h5>8</h5>
+                                <p class="card-text">Afiliaciones</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <i class="fas fa-tasks fa-2x text-warning mb-2"></i>
+                                <h5>5</h5>
+                                <p class="card-text">Pendientes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                                <h5>92%</h5>
+                                <p class="card-text">Eficiencia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Formulario PROYECTO SAP 4HANNA -->
+<div id="sap-form" class="sap-form">
+    <div class="card form-card">
+        <div class="card-header">
+            <h4 class="mb-0"><i class="fas fa-database me-2"></i>PROYECTO SAP 4HANNA</h4>
+        </div>
+        <div class="card-body">
+            <form id="sapForm">
+<!-- Tipo de Documento -->
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="tipoDocumento" class="form-label required-field">Modalidad</label>
+        <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
+            <option value="" selected disabled>Seleccione una opción</option>
+            <option selected value="INTERNO">INTERNA</option>
+            <option value="EXTERNO">EXTERNA</option>                                    
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="cantidadUsuarios" class="form-label required-field">Cantidad de Usuarios</label>
+        <select class="form-select" id="cantidadUsuarios" name="cantidadUsuarios" required>
+            <option value="" selected disabled>Seleccione cantidad</option>
+            <option selected value="1">1 Usuario</option>
+            <option value="2">2 Usuarios</option>
+            <option value="3">3 Usuarios</option>
+            <option value="4">4 Usuarios</option>
+            <option value="5">5 Usuarios</option>
+        </select>
+    </div>
+</div>
+
+<!-- Campos de texto -->
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="nombreMVP" class="form-label required-field">Nombre MVP</label>
+        <input type="text" class="form-control" id="nombreMVP" name="nombreMVP" placeholder="Ingrese el nombre del MVP" required>
+    </div>
+    <div class="col-md-6">
+        <label for="nombreEmpresa" class="form-label required-field">Nombre Empresa 1</label>
+        <input type="text" class="form-control" id="nombreEmpresa" name="nombreEmpresa" placeholder="Ingrese el nombre de la empresa" required>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="formatoDirectorio" class="form-label">Formato DIRECTORIO</label>
+        <textarea class="form-control" id="formatoDirectorio" name="formatoDirectorio" rows="3" placeholder="Especifique el formato de directorio"></textarea>
+    </div>
+    <div class="col-md-6">
+        <label for="formatoReglas" class="form-label">Formato REGLAS</label>
+        <textarea class="form-control" id="formatoReglas" name="formatoReglas" rows="3" placeholder="Especifique el formato de reglas"></textarea>
+    </div>
+</div>
+
+                <!-- Sección de Ambientes -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-server me-2"></i>Configuración de Ambientes
+                        </h5>
+                        
+                        <div id="ambientes-container">
+                            <!-- Ambiente 1 -->
+                            <div class="card mb-3 ambiente-card">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Ambiente 1</h6>
+                                    <button type="button" class="btn btn-sm btn-danger remove-ambiente" onclick="removeAmbiente(this)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label required-field">Ambiente</label>
+                                            <select class="form-select" name="ambiente[]" required>
+                                                <option value="">Seleccionar...</option>
+                                                <option value="Certificacion">Certificación</option>
+                                                <option value="Produccion">Producción</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-md-9">
+                                            <label class="form-label required-field">Input Code Data</label>
+                                            <input type="text" class="form-control" name="inputCodeData[]" placeholder="Input Code Data" required>
+                                        </div> -->
+                                    </div>
+                                    
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <label class="form-label required-field">Sender Code</label>
+                                            <input type="text" class="form-control" name="senderCode[]" placeholder="SALDOS106_LO_D.TXT" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label required-field">Receiver Code</label>
+                                            <input type="text" class="form-control" name="receiverCode[]" placeholder="CSD1.GF.GF.TBCQ.SALDO.DIA106D2" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label required-field">Description</label>
+                                            <input type="text" class="form-control" name="description[]" placeholder="ZGAFII03" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Text1</label>
+                                            <input type="text" class="form-control" name="text1[]" placeholder="NO">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Text2</label>
+                                            <input type="text" class="form-control" name="text2[]" placeholder='"DSN-CPRO.JOBS(CP1QMD61],DISP-SHR"'>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Text6</label>
+                                            <input type="text" class="form-control" name="text6[]" placeholder="UTF-8">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Text7</label>
+                                            <input type="text" class="form-control" name="text7[]" placeholder="IBM1145">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline-primary" onclick="addAmbiente()">
+                            <i class="fas fa-plus me-2"></i>Agregar otro ambiente
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón de Registrar -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-sap">
+                        <i class="fas fa-save me-2"></i>Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Contador para ambientes
+let ambienteCounter = 1;
+
+// Función para agregar un nuevo ambiente
+function addAmbiente() {
+    ambienteCounter++;
+    const container = document.getElementById('ambientes-container');
+    
+    const newAmbiente = document.createElement('div');
+    newAmbiente.className = 'card mb-3 ambiente-card';
+    newAmbiente.innerHTML = `
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Ambiente ${ambienteCounter}</h6>
+            <button type="button" class="btn btn-sm btn-danger remove-ambiente" onclick="removeAmbiente(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label required-field">Ambiente</label>
+                    <select class="form-select" name="ambiente[]" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="Certificacion">Certificación</option>
+                        <option value="Produccion">Producción</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="form-label required-field">Sender Code</label>
+                    <input type="text" class="form-control" name="senderCode[]" placeholder="SALDOS106_LO_D.TXT" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required-field">Receiver Code</label>
+                    <input type="text" class="form-control" name="receiverCode[]" placeholder="CSD1.GF.GF.TBCQ.SALDO.DIA106D2" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required-field">Description</label>
+                    <input type="text" class="form-control" name="description[]" placeholder="ZGAFII03" required>
+                </div>
+            </div>
+            
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label">Text1</label>
+                    <input type="text" class="form-control" name="text1[]" placeholder="NO">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text2</label>
+                    <input type="text" class="form-control" name="text2[]" placeholder="&quot;DSN-CPRO.JOBS(CP1QMD61],DISP-SHR&quot;">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text6</label>
+                    <input type="text" class="form-control" name="text6[]" placeholder="UTF-8">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text7</label>
+                    <input type="text" class="form-control" name="text7[]" placeholder="IBM1145">
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(newAmbiente);
+}
+
+// Función para eliminar un ambiente
+function removeAmbiente(button) {
+    const ambienteCards = document.querySelectorAll('.ambiente-card');
+    if (ambienteCards.length > 1) {
+        button.closest('.ambiente-card').remove();
+        // Renumerar los ambientes restantes
+        document.querySelectorAll('.ambiente-card').forEach((card, index) => {
+            card.querySelector('h6').textContent = `Ambiente ${index + 1}`;
+        });
+        ambienteCounter = document.querySelectorAll('.ambiente-card').length;
+    } else {
+        alert('Debe haber al menos un ambiente configurado.');
+    }
+}
+
+
+</script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para colapsar/expandir el menú
+        function toggleMenu() {
+            document.body.classList.toggle('menu-collapsed');
+            
+            // En dispositivos móviles, usar un approach diferente
+            if (window.innerWidth < 992) {
+                document.body.classList.toggle('menu-active');
+            }
+        }
+        
+        // Función para mostrar secciones
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.content-section, .sap-form').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Cerrar el menú en dispositivos móviles
+            if (window.innerWidth < 992) {
+                document.body.classList.remove('menu-active');
+            }
+            
+            // Actualizar navegación activa
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // Inicializar la página mostrando la sección de inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('inicio');
+        });
+    </script>
+
+
+    <script>
+// Manejar envío del formulario SAP
+document.getElementById('sapForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Mostrar indicador de carga
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    submitBtn.disabled = true;
+    
+    try {
+        const formData = new FormData(this);
+        
+        const response = await fetch('/procesar_sap', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Mostrar mensaje de éxito
+            alert('✅ ' + result.message);
+            
+            // Si hay documento generado, descargarlo automáticamente
+            if (result.document_path) {
+                // Crear enlace temporal para descarga
+                const downloadLink = document.createElement('a');
+                downloadLink.href = `/descargar_documento?name=${encodeURIComponent(result.document_name)}`;
+                downloadLink.download = result.document_name;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // Mensaje adicional informando sobre la descarga
+                alert('📄 Documento Word generado y descargado automáticamente');
+            }
+            
+            // Limpiar formulario después de éxito
+            this.reset();
+            // Reiniciar contador de ambientes
+            ambienteCounter = 1;
+            // Mantener solo el primer ambiente
+            const container = document.getElementById('ambientes-container');
+            while (container.children.length > 1) {
+                container.removeChild(container.lastChild);
+            }
+        } else {
+            alert('❌ ' + result.message);
+        }
+    } catch (error) {
+        alert('❌ Error de conexión: ' + error.message);
+    } finally {
+        // Restaurar botón
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+
+// Función para agregar un nuevo ambiente
+function addAmbiente() {
+    ambienteCounter++;
+    const container = document.getElementById('ambientes-container');
+    
+    const newAmbiente = document.createElement('div');
+    newAmbiente.className = 'card mb-3 ambiente-card';
+    newAmbiente.innerHTML = `
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Ambiente ${ambienteCounter}</h6>
+            <button type="button" class="btn btn-sm btn-danger remove-ambiente" onclick="removeAmbiente(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label required-field">Ambiente</label>
+                    <select class="form-select" name="ambiente[]" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="Certificacion">Certificación</option>
+                        <option value="Produccion">Producción</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="form-label required-field">Sender Code</label>
+                    <input type="text" class="form-control" name="senderCode[]" placeholder="SALDOS106_LO_D.TXT" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required-field">Receiver Code</label>
+                    <input type="text" class="form-control" name="receiverCode[]" placeholder="CSD1.GF.GF.TBCQ.SALDO.DIA106D2" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required-field">Description</label>
+                    <input type="text" class="form-control" name="description[]" placeholder="ZGAFII03" required>
+                </div>
+            </div>
+            
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label">Text1</label>
+                    <input type="text" class="form-control" name="text1[]" placeholder="NO">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text2</label>
+                    <input type="text" class="form-control" name="text2[]" placeholder="&quot;DSN-CPRO.JOBS(CP1QMD61],DISP-SHR&quot;">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text6</label>
+                    <input type="text" class="form-control" name="text6[]" placeholder="UTF-8">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text7</label>
+                    <input type="text" class="form-control" name="text7[]" placeholder="IBM1145">
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(newAmbiente);
+}
+
+// Función para eliminar un ambiente
+function removeAmbiente(button) {
+    const ambienteCards = document.querySelectorAll('.ambiente-card');
+    if (ambienteCards.length > 1) {
+        button.closest('.ambiente-card').remove();
+        // Renumerar los ambientes restantes
+        document.querySelectorAll('.ambiente-card').forEach((card, index) => {
+            card.querySelector('h6').textContent = `Ambiente ${index + 1}`;
+        });
+        ambienteCounter = document.querySelectorAll('.ambiente-card').length;
+    } else {
+        alert('Debe haber al menos un ambiente configurado.');
+    }
+}
+</script>
+</body>
+</html>
