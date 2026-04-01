@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+# Runtime outputs
+uploads/**/*
+!uploads/**/.gitkeep
+data/rules_generados/*.json
+output/*.docx

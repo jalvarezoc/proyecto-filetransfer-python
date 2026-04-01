@@ -1,0 +1,23 @@
+{
+    "rules": [
+    {
+        "comments": "REGLA DEL FTPOSI01",
+        "fileSizeEnabled": false,
+        "filePathKeyvalues": "MATCH|F:\\BCP\\Apps\\CMB1",
+        "procName": "PCONSWIND10_CDP_FTPOSI01.cdp",
+        "ruleStatus": "Enabled",
+        "priority": 1,
+        "filePathEnabled": true,
+        "altFileName": "",
+        "procArgs": "&F1=%FA_FILE_FOUND. &A1=%FA_NOT_PATH. &D1=/ssft/temp/FTPOSI01/Files/IN/CMB1",
+        "notifyUid": "",
+        "name": "RFTPOSI01_IN_01",
+        "fileSizeKeyvalues": "",
+        "lastModified": "Mon Oct 13 12:31:37 COT 2025",
+        "procPriority": "",
+        "fileNameKeyvalues": "MATCH|F:\\BCP\\Apps\\CMB1\\SCMENVIO.TXT",
+        "procClass": "",
+        "fileNameEnabled": true
+        }
+    ]
+}

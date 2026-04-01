@@ -1,185 +1,1060 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentos {{ tipo }}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generar documentos Internas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
-    .generator-section {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-left: 4px solid #e63946;
+    html, body {
+      min-height: 100%;
     }
-    .form-section {
-      margin-bottom: 15px;
+    body {
+      background: linear-gradient(180deg, #f6f2eb 0%, #ece6dc 100%);
+      color: #2d241b;
+    }
+    .app-shell {
+      max-width: 1180px;
+    }
+    .page-card {
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid #dbcdbd;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 14px 40px rgba(81, 60, 31, 0.10);
+    }
+    .text-center.mb-4 {
+      display: none;
+    }
+    .card {
+      background: #fffdf9;
+      border: 1px solid #e6dacb;
+      border-radius: 16px;
+      box-shadow: none;
+      margin-bottom: 16px !important;
+    }
+    .card-header {
+      background: transparent !important;
+      color: #2d241b !important;
+      border-bottom: none;
+      padding: 18px 20px 0;
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+    .card-body {
+      padding: 18px 20px;
+    }
+    .generator-section {
+      background: #fffdf9;
+      border: 1px solid #e6dacb;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    h2 {
+      font-size: 1.65rem;
+      margin-bottom: 16px;
+    }
+    h5 {
+      font-size: 1.02rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    .subsection-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #5a4934;
+      margin-bottom: 10px;
+    }
+    .form-label {
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #5a4934;
+    }
+    .form-control, .form-select {
+      min-height: 42px;
+      border-radius: 10px;
+      border-color: #d8c8b7;
+      font-size: 0.92rem;
+    }
+    #mensajes .alert {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+    }
+    .table-shell {
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .table-wrap {
+      min-width: 980px;
+    }
+    #tablaTransferencias, #tablaW2M, #tablaM2W {
+      margin-bottom: 0;
+      border-color: #eadfce;
+    }
+    #tablaTransferencias thead th, #tablaW2M thead th, #tablaM2W thead th {
+      font-size: 0.82rem;
+      color: #5a4934;
+      font-weight: 700;
+      background: #f8efe4;
+      border-color: #eadfce;
+      text-align: center;
+      white-space: nowrap;
+    }
+    #tablaTransferencias tbody td, #tablaW2M tbody td, #tablaM2W tbody td {
+      vertical-align: middle;
+      border-color: #f0e6d9;
+      background: #fffdfa;
+    }
+    #tablaTransferencias tbody tr.table-success td, #tablaW2M tbody tr.table-success td, #tablaM2W tbody tr.table-success td {
+      background-color: #eef8ef !important;
+    }
+    #tablaTransferencias tbody tr.table-warning td, #tablaW2M tbody tr.table-warning td, #tablaM2W tbody tr.table-warning td {
+      background-color: #fff6df !important;
+    }
+    .btn-add-row {
+      width: 100%;
+      min-height: 42px;
+      border-radius: 10px;
+      border: 1px solid #cfbea9;
+      background: #fff;
+      color: #3f3123;
+      font-weight: 700;
+    }
+    .btn-add-row:hover {
+      background: #f8efe4;
+    }
+    #agregarFila, #agregarFilaW2M, #agregarFilaM2W {
+      width: 100%;
+      min-height: 42px;
+      border-radius: 10px;
+      border: 1px solid #cfbea9;
+      background: #fff;
+      color: #3f3123;
+      font-weight: 700;
+    }
+    #agregarFila:hover, #agregarFilaW2M:hover, #agregarFilaM2W:hover {
+      background: #f8efe4;
+      color: #3f3123;
+      border-color: #cfbea9;
+    }
+    #guardarTodo {
+      background-color: #8c2f1c;
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      min-height: 46px;
+      width: 100%;
+    }
+    #guardarTodo:hover {
+      background-color: #6f2213;
+      color: #fff;
     }
     .btn-generate {
-      background-color: #e63946;
-      color: white;
-      font-weight: bold;
-      padding: 10px 20px;
+      background-color: #8c2f1c;
+      color: #fff;
+      font-weight: 700;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      min-height: 46px;
       width: 100%;
     }
     .btn-generate:hover {
-      background-color: #c1121f;
+      background-color: #6f2213;
+      color: #fff;
+    }
+    .btn-back {
+      min-height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+    .btn-sm {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: none;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-sm:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-warning {
+      border: 1px solid #c9b89f;
+      background: #f7efe3;
+      color: #6b4b23;
+    }
+    .btn-warning:hover {
+      background: #efdfc7;
+      border-color: #c9b89f;
+      color: #6b4b23;
+    }
+    .btn-danger {
+      border: 1px solid #dcbfb1;
+      background: #fff7f5;
+      color: #a22c29;
+    }
+    .btn-danger:hover {
+      background: #fbe4df;
+      border-color: #dcbfb1;
+      color: #a22c29;
+    }
+    .resalte-ambiente {
+      border-left: 6px solid #dc3545 !important;
+      box-shadow: inset 0 0 0 3px rgba(220,53,69,.25);
+      animation: pulse-red 1s ease-in-out 0s 3 alternate;
+    }
+    @keyframes pulse-red {
+      from { box-shadow: inset 0 0 0 0 rgba(220,53,69,.45); }
+      to   { box-shadow: inset 0 0 0 8px rgba(220,53,69,.10); }
+    }
+    @media (max-width: 991.98px) {
+      .page-card {
+        padding: 16px;
+      }
+      .generator-section {
+        padding: 16px;
+      }
+      .table-wrap {
+        min-width: 920px;
+      }
     }
   </style>
 </head>
-<body class="bg-light">
-  <div class="container py-4">
-    <h2 class="mb-4">Documentos {{ tipo }}</h2>
+<body>
+<div class="container app-shell py-4">
+  <h3 class="text-center mb-4">Gestion de Transferencias Internas</h3>
 
-    <!-- Sección para generar documentos Sterling -->
-    <div class="generator-section mb-4">
-      <!-- <h4>Generar Documentos para Pases Sterling</h4> -->
-      
-      <form id="sterlingForm">
-        <!-- Configuración Inicial -->
-        <div class="form-section">
-          <h5>Configuración Inicial</h5>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Elige Tipo de Documento:</label>
-              <select class="form-select" name="tipo_documento" required>
-                <option value="">Seleccionar...</option>
-                <option value="SERVIDOR">SERVIDOR</option>
-                <option value="RENOVACION">RENOVACION</option>
-                <option value="PGP">PGP</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Elige Cantidad Usuario:</label>
-              <input type="number" class="form-control" name="cantidad_usuario" min="1" max="10" required>
-            </div>
-          </div>
+  <div class="page-card">
+    <h2>Generar documentos Internas</h2>
+
+    <div id="mensajes"></div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-bold">Informacion General</div>
+    <div class="card-body">
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-3">
+          <label class="form-label">Tipo de Documento:</label>
+          <select class="form-select" id="tipoDocumento" required>
+            <option value="">Seleccione...</option>
+            <option value="WIND_TO_MAINF">WINDOWS A MAINFRAME</option>
+            <option value="MAINF_TO_WIND">MAINFRAME A WINDOWS</option>
+            <option value="WIND_MAINF_TO_MAINF_WIND">WINDOWS-MAINFRAME / MAINFRAME-WINDOWS</option>
+            <option value="WIND_TO_WIND">WINDOWS A WINDOWS</option>
+            <option value="WIND_TO_LINUX">WINDOWS A LINUX</option>
+            <option value="LINUX_TO_LINUX">LINUX A LINUX</option>
+            <option value="LINUX_TO_WIND">LINUX A WINDOWS</option>
+          </select>
         </div>
-
-        <!-- Datos de la Empresa, MVP y Certificados -->
-        <div class="form-section">
-          <h5>Datos de la Empresa, MVP y Certificados</h5>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Nombre MVP:</label>
-              <input type="text" class="form-control" name="nombre_mvp" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Nombre Empresa 1:</label>
-              <input type="text" class="form-control" name="nombre_empresa" required>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Nombre Usuario FT 1:</label>
-              <input type="text" class="form-control" name="nombre_usuario" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Nombre Certificado 1:</label>
-              <input type="text" class="form-control" name="nombre_certificado" required>
-            </div>
-          </div>
+        <div class="col-md-3">
+          <label class="form-label">Nombre OCD:</label>
+          <input type="text" class="form-control" id="nombreOCD" placeholder="Ej. OCD_1234" required>
         </div>
-
-        <!-- Datos de Renovación de Certificados -->
-        <div class="form-section">
-          <h5>Datos de Renovación de Certificados</h5>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Fecha de Vencimiento certificado:</label>
-              <input type="date" class="form-control" name="fecha_vencimiento" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Fecha de Vencimiento certificado anterior:</label>
-              <input type="date" class="form-control" name="fecha_vencimiento_anterior" required>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Commit:</label>
-              <input type="text" class="form-control" name="commit" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Ruta en bitbucket:</label>
-              <input type="text" class="form-control" name="ruta_bitbucket" required>
-            </div>
-          </div>
+        <div class="col-md-3">
+          <label class="form-label">Usuario FT:</label>
+          <input type="text" class="form-control" id="usuarioFT" placeholder="Ej. usuario01" required>
         </div>
-
-        <button type="submit" class="btn btn-generate">Generar Documentos</button>
-      </form>
-    </div>
-
-    <!-- Subir nuevo documento -->
-    <!-- <form action="{{ url_for('upload', categoria=tipo.lower()) }}" method="post" enctype="multipart/form-data" class="mb-4">
-      <div class="input-group">
-        <input type="file" name="file" class="form-control" required>
-        <button class="btn btn-danger" type="submit">Subir</button>
-      </div>
-    </form> -->
-
-    <!-- Lista de documentos -->
-    <!-- <div class="row g-4">
-      {% for doc in documentos %}
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body">
-            <h5 class="card-title">{{ doc.nombre }}</h5>
-            <p class="card-text">
-              <strong>Última modificación:</strong> {{ doc.fecha_modificacion }}<br>
-              <strong>Tamaño:</strong> {{ doc.tamano }}
-            </p>
-            <a href="{{ url_for('documento', categoria=doc.categoria, doc_id=doc.id) }}" class="btn btn-outline-danger btn-sm">Ver</a>
-            <a href="{{ url_for('download', categoria=doc.categoria, filename=doc.id) }}" class="btn btn-danger btn-sm">Descargar</a>
-          </div>
+        <div class="col-md-3">
+          <label class="form-label">Modalidad:</label>
+          <select class="form-select" id="modalidad" required>
+            <option value="CDPremium" selected>CDPremium</option>
+            <option value="Peer-to-Peer">Peer-to-Peer</option>
+          </select>
         </div>
       </div>
-      {% else %}
-      <p>No hay documentos en esta categoría.</p>
-      {% endfor %}
-    </div> -->
-
-    <div class="mt-4">
-      <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al menú principal</a>
     </div>
   </div>
 
-  <script>
-    document.getElementById('sterlingForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Aquí recopilarías los datos del formulario
-      const formData = new FormData(this);
-      const data = Object.fromEntries(formData.entries());
-      
-      // En una implementación real, enviarías estos datos al servidor
-      // para generar los documentos. Por ahora, simulamos la generación
-      alert('Documentos generados con éxito. En una implementación real, se descargarían automáticamente.');
-      
-      // Simulación de descarga (en una implementación real, esto se haría desde el servidor)
-      console.log('Datos para generar documentos:', data);
-      
-      // En una implementación real, aquí harías:
-      // fetch('/generate-sterling-docs', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // })
-      // .then(response => response.blob())
-      // .then(blob => {
-      //   const url = window.URL.createObjectURL(blob);
-      //   const a = document.createElement('a');
-      //   a.style.display = 'none';
-      //   a.href = url;
-      //   a.download = 'documentos_sterling.zip';
-      //   document.body.appendChild(a);
-      //   a.click();
-      //   window.URL.revokeObjectURL(url);
-      // });
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-secondary text-white fw-bold">Transferencias</div>
+    <div class="card-body">
+      <div id="seccionSimpleTransferencias">
+      <table class="table table-bordered align-middle" id="tablaTransferencias">
+        <thead class="table-light text-center">
+          <tr>
+            <th>Ambiente</th>
+            <th>Servidor</th>
+            <th>Ruta Origen</th>
+            <th class="col-servidor-destino d-none">Servidor Destino</th>
+            <th class="col-archivo-origen">Archivo Origen</th>
+            <th class="col-ruta-destino">Ruta Destino</th>
+            <th class="col-archivo-destino">Archivo Destino</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button class="btn btn-sm" id="agregarFila">+ Agregar fila</button>
+      </div>
+      <div id="seccionBidireccionalTransferencias" class="d-none">
+        <p class="fw-semibold mb-2">WINDOW A MAINFRAME</p>
+        <table class="table table-bordered align-middle" id="tablaW2M">
+          <thead class="table-light text-center">
+            <tr>
+              <th>Ambiente</th>
+              <th>Servidor</th>
+              <th>Ruta Origen</th>
+              <th>Archivo Origen</th>
+              <th>Dataset</th>
+              <th>Job</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button class="btn btn-sm mb-3" id="agregarFilaW2M">+ Agregar fila</button>
+        <p class="fw-semibold mb-2">MAINFRAME A WINDOWS</p>
+        <table class="table table-bordered align-middle" id="tablaM2W">
+          <thead class="table-light text-center">
+            <tr>
+              <th>Ambiente</th>
+              <th>Servidor</th>
+              <th>Ruta Origen</th>
+              <th>Ruta Destino</th>
+              <th>Nombre Archivo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button class="btn btn-sm" id="agregarFilaM2W">+ Agregar fila</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-1">
+    <div class="col-md-6">
+      <button class="btn btn-primary" id="guardarTodo">Generar Word</button>
+    </div>
+    <div class="col-md-6">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary btn-back w-100">Volver al menu principal</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+$(document).ready(function () {
+  let bloqueandoEnvio = false;
+
+  $("#agregarFila").text("+ Agregar fila");
+  $("#agregarFilaW2M").text("+ Agregar fila");
+  $("#agregarFilaM2W").text("+ Agregar fila");
+  $("#guardarTodo").text("Generar Word");
+
+  function mostrarMensaje(tipo, texto) {
+    const alerta = `
+      <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+        ${texto}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>`;
+    $("#mensajes").html(alerta);
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+  }
+
+  function validarCampos(inputs) {
+    let incompletos = false;
+    inputs.each(function () {
+      if (!$(this).val().trim()) {
+        $(this).addClass("is-invalid");
+        incompletos = true;
+      } else {
+        $(this).removeClass("is-invalid");
+      }
     });
-  </script>
+    return !incompletos;
+  }
+
+  function aplicarColorFila(fila) {
+    fila.removeClass("table-success table-warning");
+    const ambiente = fila.find(".ambiente").val();
+    if (ambiente === "Certificacion") fila.addClass("table-success");
+    else if (ambiente === "Produccion") fila.addClass("table-warning");
+  }
+
+  function limpiarResaltados(tablaSelector = "#tablaTransferencias") {
+    $(`${tablaSelector} tbody tr`).removeClass("resalte-ambiente");
+  }
+
+  function limpiarTodosResaltados() {
+    limpiarResaltados("#tablaTransferencias");
+    limpiarResaltados("#tablaW2M");
+    limpiarResaltados("#tablaM2W");
+  }
+
+  function esMainframeAWindows() {
+    const tipoDocumento = $("#tipoDocumento").val();
+    return (
+      tipoDocumento === "MAINF_TO_WIND"
+      || tipoDocumento === "WIND_TO_LINUX"
+      || tipoDocumento === "LINUX_TO_WIND"
+      || tipoDocumento === "WIND_TO_WIND"
+      || tipoDocumento === "LINUX_TO_LINUX"
+    );
+  }
+
+  function esWindowsAMainframe() {
+    return $("#tipoDocumento").val() === "WIND_TO_MAINF";
+  }
+
+  function requiereServidorDestino() {
+    const tipoDocumento = $("#tipoDocumento").val();
+    return (
+      tipoDocumento === "WIND_TO_LINUX"
+      || tipoDocumento === "LINUX_TO_WIND"
+      || tipoDocumento === "WIND_TO_WIND"
+      || tipoDocumento === "LINUX_TO_LINUX"
+    );
+  }
+
+  function esBidireccional() {
+    return $("#tipoDocumento").val() === "WIND_MAINF_TO_MAINF_WIND";
+  }
+
+  function actualizarTransferenciasPorTipo() {
+    const esBi = esBidireccional();
+    $("#seccionSimpleTransferencias").toggleClass("d-none", esBi);
+    $("#seccionBidireccionalTransferencias").toggleClass("d-none", !esBi);
+    if (esBi) {
+      return;
+    }
+
+    const esMainfToWind = esMainframeAWindows();
+    const esWindToMainf = esWindowsAMainframe();
+    const mostrarServidorDestino = requiereServidorDestino();
+    const encabezadoServidorDestino = $("#tablaTransferencias thead .col-servidor-destino");
+    const encabezadoRutaDestino = $("#tablaTransferencias thead .col-ruta-destino");
+    const encabezadoArchivoDestino = $("#tablaTransferencias thead .col-archivo-destino");
+
+    if (esMainfToWind) {
+      encabezadoServidorDestino.toggleClass("d-none", !mostrarServidorDestino);
+      $("#tablaTransferencias tbody .td-servidor-destino").toggleClass("d-none", !mostrarServidorDestino);
+      $("#tablaTransferencias thead .col-archivo-origen").addClass("d-none");
+      $("#tablaTransferencias tbody .td-archivo-origen").addClass("d-none");
+      encabezadoRutaDestino.text("Ruta Destino");
+      encabezadoArchivoDestino.text("Nombre Archivo");
+
+      $("#tablaTransferencias tbody tr").each(function () {
+        const inputArchivoOrigen = $(this).find(".archivoOrigen");
+        const inputRutaDestino = $(this).find(".rutaDestino");
+        const inputArchivoDestino = $(this).find(".archivoDestino");
+        const inputServidorDestino = $(this).find(".servidorDestino");
+
+        if (!inputArchivoDestino.val().trim() && inputArchivoOrigen.val().trim()) {
+          inputArchivoDestino.val(inputArchivoOrigen.val().trim());
+        }
+
+        inputArchivoOrigen.prop("required", false).removeClass("is-invalid");
+        inputServidorDestino
+          .removeClass("is-invalid")
+          .attr("placeholder", "Servidor Destino");
+        inputRutaDestino.attr("placeholder", "Ruta Destino");
+        inputArchivoDestino.prop("required", true).attr("placeholder", "Nombre Archivo");
+      });
+      return;
+    }
+
+    encabezadoServidorDestino.addClass("d-none");
+    $("#tablaTransferencias tbody .td-servidor-destino").addClass("d-none");
+    $("#tablaTransferencias thead .col-archivo-origen").removeClass("d-none");
+    $("#tablaTransferencias tbody .td-archivo-origen").removeClass("d-none");
+    encabezadoRutaDestino.text(esWindToMainf ? "Dataset" : "Ruta Destino");
+    encabezadoArchivoDestino.text(esWindToMainf ? "Job" : "Archivo Destino");
+
+    $("#tablaTransferencias tbody tr").each(function () {
+      const inputRutaDestino = $(this).find(".rutaDestino");
+      const inputArchivoDestino = $(this).find(".archivoDestino");
+      $(this).find(".servidorDestino").removeClass("is-invalid");
+      $(this).find(".archivoOrigen").prop("required", true);
+      inputRutaDestino.attr("placeholder", esWindToMainf ? "Dataset" : "Ruta Destino");
+      inputArchivoDestino
+        .prop("required", !esWindToMainf)
+        .removeClass("is-invalid")
+        .attr("placeholder", esWindToMainf ? "Job" : "Archivo Destino");
+    });
+  }
+
+  function resaltarAmbiente(ambiente) {
+    const filas = $("#tablaTransferencias tbody tr").filter(function(){
+      return $(this).find('.ambiente').val() === ambiente;
+    });
+    filas.addClass("resalte-ambiente");
+    if (filas.length) {
+      const off = $(filas.get(0)).offset();
+      if (off) { $("html, body").animate({ scrollTop: off.top - 80 }, "fast"); }
+    }
+  }
+
+  function crearFila(values) {
+    const v = values || {};
+    const tr = $("<tr>");
+    const tdAmbiente = $("<td>").append(
+      $("<select>").addClass("form-select ambiente").append(
+        $("<option>", { value: "Certificacion", text: "Certificacion" }),
+        $("<option>", { value: "Produccion", text: "Produccion" })
+      )
+    );
+    const tdServidor = $("<td>").append($("<input>", { type: "text", class: "form-control servidor", placeholder: "Servidor (Ej. PFILED)", required: true }));
+    // Orden cambiado: Ruta antes que Archivo
+    const tdRutaOrigen = $("<td>").append($("<input>", { type: "text", class: "form-control rutaOrigen", placeholder: "Ruta Origen" }));
+    const tdServidorDestino = $("<td>").addClass("td-servidor-destino d-none").append(
+      $("<input>", { type: "text", class: "form-control servidorDestino", placeholder: "Servidor Destino" })
+    );
+    const tdArchivoOrigen = $("<td>").addClass("td-archivo-origen").append($("<input>", { type: "text", class: "form-control archivoOrigen", placeholder: "Archivo Origen", required: true }));
+    const tdRutaDestino = $("<td>").append($("<input>", { type: "text", class: "form-control rutaDestino", placeholder: "Ruta Destino" }));
+    const tdArchivoDestino = $("<td>").append($("<input>", { type: "text", class: "form-control archivoDestino", placeholder: "Archivo Destino", required: true }));
+    const tdAcciones = $("<td>").addClass("text-center").append(
+      $("<button>", { class: "btn btn-warning btn-sm duplicarFila", title: "Duplicar", text: "+" }),
+      $("<button>", { class: "btn btn-danger btn-sm eliminarFila", title: "Eliminar", text: "x" })
+    );
+
+    // Alineamos el append con el nuevo orden de columnas
+    tr.append(tdAmbiente, tdServidor, tdRutaOrigen, tdServidorDestino, tdArchivoOrigen, tdRutaDestino, tdArchivoDestino, tdAcciones);
+
+    tr.find('.ambiente').val(v.ambiente || 'Certificacion');
+    tr.find('.servidor').val(v.servidor || '');
+    tr.find('.rutaOrigen').val(v.rutaOrigen || '');
+    tr.find('.servidorDestino').val(v.servidorDestino || '');
+    tr.find('.archivoOrigen').val(v.archivoOrigen || '');
+    tr.find('.rutaDestino').val(v.rutaDestino || '');
+    tr.find('.archivoDestino').val(v.archivoDestino || '');
+
+    aplicarColorFila(tr);
+    return tr;
+  }
+
+  function crearFilaW2M(values) {
+    const v = values || {};
+    const tr = $("<tr>");
+    const tdAmbiente = $("<td>").append(
+      $("<select>").addClass("form-select ambiente").append(
+        $("<option>", { value: "Certificacion", text: "Certificacion" }),
+        $("<option>", { value: "Produccion", text: "Produccion" })
+      )
+    );
+    const tdServidor = $("<td>").append($("<input>", { type: "text", class: "form-control servidor", placeholder: "Servidor (Ej. PFILED)", required: true }));
+    const tdRutaOrigen = $("<td>").append($("<input>", { type: "text", class: "form-control rutaOrigen", placeholder: "Ruta Origen", required: true }));
+    const tdArchivoOrigen = $("<td>").append($("<input>", { type: "text", class: "form-control archivoOrigen", placeholder: "Archivo Origen", required: true }));
+    const tdDataset = $("<td>").append($("<input>", { type: "text", class: "form-control dataset", placeholder: "Dataset", required: true }));
+    const tdJob = $("<td>").append($("<input>", { type: "text", class: "form-control job", placeholder: "Job (Opcional)" }));
+    const tdAcciones = $("<td>").addClass("text-center").append(
+      $("<button>", { class: "btn btn-warning btn-sm duplicarFila", title: "Duplicar", text: "+" }),
+      $("<button>", { class: "btn btn-danger btn-sm eliminarFila", title: "Eliminar", text: "x" })
+    );
+    tr.append(tdAmbiente, tdServidor, tdRutaOrigen, tdArchivoOrigen, tdDataset, tdJob, tdAcciones);
+    tr.find(".ambiente").val(v.ambiente || "Certificacion");
+    tr.find(".servidor").val(v.servidor || "");
+    tr.find(".rutaOrigen").val(v.rutaOrigen || "");
+    tr.find(".archivoOrigen").val(v.archivoOrigen || "");
+    tr.find(".dataset").val(v.dataset || "");
+    tr.find(".job").val(v.job || "");
+    aplicarColorFila(tr);
+    return tr;
+  }
+
+  function crearFilaM2W(values) {
+    const v = values || {};
+    const tr = $("<tr>");
+    const tdAmbiente = $("<td>").append(
+      $("<select>").addClass("form-select ambiente").append(
+        $("<option>", { value: "Certificacion", text: "Certificacion" }),
+        $("<option>", { value: "Produccion", text: "Produccion" })
+      )
+    );
+    const tdServidor = $("<td>").append($("<input>", { type: "text", class: "form-control servidor", placeholder: "Servidor (Ej. PFILED)", required: true }));
+    const tdRutaOrigen = $("<td>").append($("<input>", { type: "text", class: "form-control rutaOrigen", placeholder: "Ruta Origen", required: true }));
+    const tdRutaDestino = $("<td>").append($("<input>", { type: "text", class: "form-control rutaDestino", placeholder: "Ruta Destino", required: true }));
+    const tdNombreArchivo = $("<td>").append($("<input>", { type: "text", class: "form-control nombreArchivo", placeholder: "Nombre Archivo", required: true }));
+    const tdAcciones = $("<td>").addClass("text-center").append(
+      $("<button>", { class: "btn btn-warning btn-sm duplicarFila", title: "Duplicar", text: "+" }),
+      $("<button>", { class: "btn btn-danger btn-sm eliminarFila", title: "Eliminar", text: "x" })
+    );
+    tr.append(tdAmbiente, tdServidor, tdRutaOrigen, tdRutaDestino, tdNombreArchivo, tdAcciones);
+    tr.find(".ambiente").val(v.ambiente || "Certificacion");
+    tr.find(".servidor").val(v.servidor || "");
+    tr.find(".rutaOrigen").val(v.rutaOrigen || "");
+    tr.find(".rutaDestino").val(v.rutaDestino || "");
+    tr.find(".nombreArchivo").val(v.nombreArchivo || "");
+    aplicarColorFila(tr);
+    return tr;
+  }
+
+  // Insertar una fila al final del bloque de su ambiente
+  function insertarEnAmbiente(tr, tablaSelector = "#tablaTransferencias") {
+    const ambiente = tr.find('.ambiente').val();
+    const filasMismoAmbiente = $(`${tablaSelector} tbody tr`).filter(function(){
+      return $(this).find('.ambiente').val() === ambiente;
+    });
+    if (filasMismoAmbiente.length > 0) {
+      filasMismoAmbiente.last().after(tr);
+    } else {
+      // Si no existe el bloque aun, insertamos respetando orden: Certificacion primero
+      const esCert = ambiente === 'Certificacion';
+      const filas = $(`${tablaSelector} tbody tr`);
+      if (esCert) {
+        if (filas.length) filas.first().before(tr); else $(`${tablaSelector} tbody`).append(tr);
+      } else {
+        $(`${tablaSelector} tbody`).append(tr);
+      }
+    }
+  }
+
+  function limpiarTransferenciasPorCambioTipo() {
+    const tbody = $("#tablaTransferencias tbody");
+    tbody.empty();
+    tbody.append(crearFila({ ambiente: 'Certificacion' }));
+    tbody.append(crearFila({ ambiente: 'Produccion' }));
+    const tbodyW2M = $("#tablaW2M tbody");
+    tbodyW2M.empty();
+    tbodyW2M.append(crearFilaW2M({ ambiente: 'Certificacion' }));
+    tbodyW2M.append(crearFilaW2M({ ambiente: 'Produccion' }));
+
+    const tbodyM2W = $("#tablaM2W tbody");
+    tbodyM2W.empty();
+    tbodyM2W.append(crearFilaM2W({ ambiente: 'Certificacion' }));
+    tbodyM2W.append(crearFilaM2W({ ambiente: 'Produccion' }));
+
+    limpiarTodosResaltados();
+    $("#mensajes").empty();
+  }
+
+  // 2 filas por defecto
+  limpiarTransferenciasPorCambioTipo();
+  actualizarTransferenciasPorTipo();
+
+  $("#agregarFila").click(function () {
+    const nueva = crearFila({ ambiente: 'Certificacion' });
+    insertarEnAmbiente(nueva, "#tablaTransferencias");
+    actualizarTransferenciasPorTipo();
+  });
+
+  $("#agregarFilaW2M").click(function () {
+    const nueva = crearFilaW2M({ ambiente: 'Certificacion' });
+    insertarEnAmbiente(nueva, "#tablaW2M");
+  });
+
+  $("#agregarFilaM2W").click(function () {
+    const nueva = crearFilaM2W({ ambiente: 'Certificacion' });
+    insertarEnAmbiente(nueva, "#tablaM2W");
+  });
+
+  $("#tipoDocumento").on("change", function () {
+    limpiarTransferenciasPorCambioTipo();
+    actualizarTransferenciasPorTipo();
+  });
+
+  // Eventos de cambio para colores y limpiar resaltados
+  $(document).on("change", ".ambiente", function () {
+    aplicarColorFila($(this).closest("tr"));
+    limpiarTodosResaltados();
+  });
+  $(document).on("input", "#tablaTransferencias input, #tablaW2M input, #tablaM2W input", function () {
+    limpiarTodosResaltados();
+    if ($(this).val().trim()) {
+      $(this).removeClass("is-invalid");
+    }
+  });
+
+  // Eliminar fila (protegido: cuando queda 1 de Certificacion y 1 de Produccion no se puede)
+  $(document).on("click", ".eliminarFila", function () {
+    const tablaId = `#${$(this).closest("table").attr("id")}`;
+    const totalCert = $(`${tablaId} tbody tr`).filter(function(){
+      return $(this).find('.ambiente').val() === 'Certificacion';
+    }).length;
+    const totalProd = $(`${tablaId} tbody tr`).filter(function(){
+      return $(this).find('.ambiente').val() === 'Produccion';
+    }).length;
+
+    if (totalCert === 1 && totalProd === 1) {
+      mostrarMensaje("info", " No puedes eliminar esta fila: debe existir al menos una transferencia de <strong>Certificacion</strong> y una de <strong>Produccion</strong>.");
+      return;
+    }
+
+    $(this).closest("tr").remove();
+
+    // En caso extremo (no deberÃ­a suceder por la regla anterior), reponer ambas
+    const total = $(`${tablaId} tbody tr`).length;
+    if (total === 0) {
+      const tbody = $(`${tablaId} tbody`);
+      if (tablaId === "#tablaW2M") {
+        tbody.append(crearFilaW2M({ ambiente: 'Certificacion' }));
+        tbody.append(crearFilaW2M({ ambiente: 'Produccion' }));
+      } else if (tablaId === "#tablaM2W") {
+        tbody.append(crearFilaM2W({ ambiente: 'Certificacion' }));
+        tbody.append(crearFilaM2W({ ambiente: 'Produccion' }));
+      } else {
+        tbody.append(crearFila({ ambiente: 'Certificacion' }));
+        tbody.append(crearFila({ ambiente: 'Produccion' }));
+      }
+      mostrarMensaje("info", " Se requieren al menos dos transferencias (Certificacion y Produccion). Se agregaron automaticamente.");
+    }
+  });
+
+  // Duplicar fila (se inserta en el bloque del mismo ambiente)
+  $(document).on("click", ".duplicarFila", function () {
+    const fila = $(this).closest("tr");
+    const tablaId = `#${$(this).closest("table").attr("id")}`;
+    if (tablaId === "#tablaW2M") {
+      const clon = crearFilaW2M({
+        ambiente: fila.find('.ambiente').val(),
+        servidor: fila.find('.servidor').val(),
+        rutaOrigen: fila.find('.rutaOrigen').val(),
+        archivoOrigen: fila.find('.archivoOrigen').val(),
+        dataset: fila.find('.dataset').val(),
+        job: fila.find('.job').val()
+      });
+      insertarEnAmbiente(clon, "#tablaW2M");
+      return;
+    }
+
+    if (tablaId === "#tablaM2W") {
+      const clon = crearFilaM2W({
+        ambiente: fila.find('.ambiente').val(),
+        servidor: fila.find('.servidor').val(),
+        rutaOrigen: fila.find('.rutaOrigen').val(),
+        rutaDestino: fila.find('.rutaDestino').val(),
+        nombreArchivo: fila.find('.nombreArchivo').val()
+      });
+      insertarEnAmbiente(clon, "#tablaM2W");
+      return;
+    }
+
+    const clon = crearFila({
+      ambiente: fila.find('.ambiente').val(),
+      servidor: fila.find('.servidor').val(),
+      servidorDestino: fila.find('.servidorDestino').val(),
+      archivoOrigen: fila.find('.archivoOrigen').val(),
+      rutaOrigen: fila.find('.rutaOrigen').val(),
+      archivoDestino: fila.find('.archivoDestino').val(),
+      rutaDestino: fila.find('.rutaDestino').val()
+    });
+    insertarEnAmbiente(clon, "#tablaTransferencias");
+    actualizarTransferenciasPorTipo();
+  });
+
+  function validarBalanceYServidores(transferencias, selectorTabla, etiqueta) {
+    const totalCert = transferencias.filter(t => t.ambiente === 'Certificacion').length;
+    const totalProd = transferencias.filter(t => t.ambiente === 'Produccion').length;
+
+    if (totalCert === 0 || totalProd === 0) {
+      return `Debe existir al menos una transferencia para <strong>Certificacion</strong> y otra para <strong>Produccion</strong> en <strong>${etiqueta}</strong>.`;
+    }
+
+    if (totalCert !== totalProd) {
+      const exceso = totalCert > totalProd ? 'Certificacion' : 'Produccion';
+      limpiarResaltados(selectorTabla);
+      const filas = $(`${selectorTabla} tbody tr`).filter(function(){
+        return $(this).find('.ambiente').val() === exceso;
+      });
+      filas.addClass("resalte-ambiente");
+      if (filas.length) {
+        const off = $(filas.get(0)).offset();
+        if (off) { $("html, body").animate({ scrollTop: off.top - 80 }, "fast"); }
+      }
+      return `Debe haber el <strong>mismo numero</strong> de transferencias en <strong>Certificacion</strong> y <strong>Produccion</strong> en <strong>${etiqueta}</strong>. (Certificacion: ${totalCert} | Produccion: ${totalProd})`;
+    }
+
+    const normalizarServidor = (valor) => (valor || "").trim().toUpperCase();
+    const servidoresCert = new Set(
+      transferencias
+        .filter(t => t.ambiente === "Certificacion")
+        .map(t => normalizarServidor(t.servidor))
+        .filter(Boolean)
+    );
+    const servidoresProd = new Set(
+      transferencias
+        .filter(t => t.ambiente === "Produccion")
+        .map(t => normalizarServidor(t.servidor))
+        .filter(Boolean)
+    );
+    const servidoresRepetidos = [...servidoresCert].filter(s => servidoresProd.has(s));
+
+    if (servidoresRepetidos.length > 0) {
+      return `No se permite el mismo <strong>Servidor</strong> en <strong>Certificacion</strong> y <strong>Produccion</strong> para <strong>${etiqueta}</strong>. Repetidos: <strong>${servidoresRepetidos.join(", ")}</strong>.`;
+    }
+    return "";
+  }
+
+  // Guardar Todo con validaciones
+  $("#guardarTodo").click(function () {
+    if (bloqueandoEnvio) return; // Evita doble envio
+    bloqueandoEnvio = true;
+
+    $("#mensajes").empty();
+
+    // 1) Informacion General
+    if (!validarCampos($("#tipoDocumento, #nombreOCD, #usuarioFT, #modalidad"))) {
+      mostrarMensaje("warning", " Completa todos los campos obligatorios de <strong>Informacion General</strong>.");
+      bloqueandoEnvio = false;
+      return;
+    }
+
+    let data = null;
+    if (esBidireccional()) {
+      const transferenciasW2M = [];
+      const transferenciasM2W = [];
+      let incompletas = false;
+
+      $("#tablaW2M tbody tr").each(function () {
+        if (!validarCampos($(this).find("input[required]"))) incompletas = true;
+        transferenciasW2M.push({
+          ambiente: $(this).find(".ambiente").val(),
+          servidor: $(this).find(".servidor").val().trim(),
+          rutaOrigen: $(this).find(".rutaOrigen").val().trim(),
+          archivoOrigen: $(this).find(".archivoOrigen").val().trim(),
+          dataset: $(this).find(".dataset").val().trim(),
+          job: $(this).find(".job").val().trim()
+        });
+      });
+
+      $("#tablaM2W tbody tr").each(function () {
+        if (!validarCampos($(this).find("input[required]"))) incompletas = true;
+        transferenciasM2W.push({
+          ambiente: $(this).find(".ambiente").val(),
+          servidor: $(this).find(".servidor").val().trim(),
+          rutaOrigen: $(this).find(".rutaOrigen").val().trim(),
+          rutaDestino: $(this).find(".rutaDestino").val().trim(),
+          nombreArchivo: $(this).find(".nombreArchivo").val().trim()
+        });
+      });
+
+      if (incompletas) {
+        mostrarMensaje("danger", " Hay transferencias con campos obligatorios vacios. Completalos antes de guardar.");
+        bloqueandoEnvio = false;
+        return;
+      }
+
+      const errorW2M = validarBalanceYServidores(transferenciasW2M, "#tablaW2M", "WINDOW A MAINFRAME");
+      if (errorW2M) {
+        mostrarMensaje("warning", ` ${errorW2M}`);
+        bloqueandoEnvio = false;
+        return;
+      }
+
+      const errorM2W = validarBalanceYServidores(transferenciasM2W, "#tablaM2W", "MAINFRAME A WINDOWS");
+      if (errorM2W) {
+        mostrarMensaje("warning", ` ${errorM2W}`);
+        bloqueandoEnvio = false;
+        return;
+      }
+
+      const transferencias = [
+        ...transferenciasW2M.map(t => ({
+          ambiente: t.ambiente,
+          servidor: t.servidor,
+          rutaOrigen: t.rutaOrigen,
+          archivoOrigen: t.archivoOrigen,
+          rutaDestino: t.dataset,
+          archivoDestino: t.job
+        })),
+        ...transferenciasM2W.map(t => ({
+          ambiente: t.ambiente,
+          servidor: t.servidor,
+          rutaOrigen: t.rutaOrigen,
+          archivoOrigen: t.nombreArchivo,
+          rutaDestino: t.rutaDestino,
+          archivoDestino: t.nombreArchivo
+        }))
+      ];
+
+      data = {
+        tipoDocumento: $("#tipoDocumento").val(),
+        nombreOCD: $("#nombreOCD").val(),
+        usuarioFT: $("#usuarioFT").val(),
+        modalidad: $("#modalidad").val(),
+        transferencias,
+        transferenciasW2M,
+        transferenciasM2W
+      };
+    } else {
+      const transferencias = [];
+      let incompletas = false;
+
+      $("#tablaTransferencias tbody tr").each(function () {
+        const esMainfToWind = esMainframeAWindows();
+        const pedirServidorDestino = requiereServidorDestino();
+        const nombreArchivo = $(this).find(".archivoDestino").val().trim();
+        const fila = {
+          ambiente: $(this).find(".ambiente").val(),
+          servidor: $(this).find(".servidor").val().trim(),
+          servidorDestino: $(this).find(".servidorDestino").val().trim(),
+          rutaOrigen: $(this).find(".rutaOrigen").val().trim(),
+          archivoOrigen: esMainfToWind ? nombreArchivo : $(this).find(".archivoOrigen").val().trim(),
+          rutaDestino: $(this).find(".rutaDestino").val().trim(),
+          archivoDestino: nombreArchivo
+        };
+        if (pedirServidorDestino && !fila.servidorDestino) {
+          $(this).find(".servidorDestino").addClass("is-invalid");
+          incompletas = true;
+        } else {
+          $(this).find(".servidorDestino").removeClass("is-invalid");
+        }
+        if (!validarCampos($(this).find("input[required]"))) incompletas = true;
+        transferencias.push(fila);
+      });
+
+      if (transferencias.length === 0) {
+        mostrarMensaje("warning", " Debes agregar al menos una <strong>transferencia</strong>.");
+        bloqueandoEnvio = false;
+        return;
+      }
+      if (incompletas) {
+        mostrarMensaje("danger", " Hay transferencias con campos obligatorios vacios. Completalos antes de guardar.");
+        bloqueandoEnvio = false;
+        return;
+      }
+
+      const errorSimple = validarBalanceYServidores(transferencias, "#tablaTransferencias", "Transferencias");
+      if (errorSimple) {
+        mostrarMensaje("warning", ` ${errorSimple}`);
+        bloqueandoEnvio = false;
+        return;
+      }
+
+      transferencias.sort((a, b) => a.ambiente === b.ambiente ? 0 : (a.ambiente === "Certificacion" ? -1 : 1));
+
+      data = {
+        tipoDocumento: $("#tipoDocumento").val(),
+        nombreOCD: $("#nombreOCD").val(),
+        usuarioFT: $("#usuarioFT").val(),
+        modalidad: $("#modalidad").val(),
+        transferencias
+      };
+    }
+
+    const btn = $("#guardarTodo");
+    btn.prop("disabled", true).text("Generando...");
+
+    fetch("/guardar_internas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+
+
+    .then(response => {
+      if (!response.ok) {
+        return response.json()
+          .then(err => {
+            throw new Error(err.message || "Error al generar documentos");
+          })
+          .catch(() => {
+            throw new Error("Error al generar documentos");
+          });
+      }
+
+      const contentDisposition = response.headers.get("Content-Disposition") || "";
+      const match = contentDisposition.match(/filename\*?=(?:UTF-8''|")?([^\";]+)/i);
+      const wordName = match ? decodeURIComponent(match[1].replace(/"/g, "")) : null;
+
+      const jsonCertName = response.headers.get("X-JSON-CERT-NAME");
+      const jsonCertB64  = response.headers.get("X-JSON-CERT-DATA");
+
+      const jsonProdName = response.headers.get("X-JSON-PROD-NAME");
+      const jsonProdB64  = response.headers.get("X-JSON-PROD-DATA");
+
+      return response.blob().then(wordBlob => ({
+        wordBlob,
+        wordName,
+        jsonCertName,
+        jsonCertB64,
+        jsonProdName,
+        jsonProdB64
+      }));
+    })
+    .then(({ wordBlob, wordName, jsonCertName, jsonCertB64, jsonProdName, jsonProdB64 }) => {
+
+      // ==========================
+      //  DESCARGAR WORD
+      // ==========================
+      const wordUrl = URL.createObjectURL(wordBlob);
+      const a = document.createElement("a");
+      a.href = wordUrl;
+      a.download = wordName || "SSFT-MIS-OCD.docx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(wordUrl);
+
+      // ==========================
+      //  DESCARGAR JSON CERTIFICACION
+      // ==========================
+      if (jsonCertName && jsonCertB64) {
+        const jsonTextCert = atob(jsonCertB64);
+        const jsonBlobCert = new Blob(
+          [jsonTextCert],
+          { type: "application/json;charset=utf-8" }
+        );
+
+        const urlCert = URL.createObjectURL(jsonBlobCert);
+        const aCert = document.createElement("a");
+        aCert.href = urlCert;
+        aCert.download = jsonCertName;
+        document.body.appendChild(aCert);
+        aCert.click();
+        aCert.remove();
+        URL.revokeObjectURL(urlCert);
+      }
+
+      // ==========================
+      //  DESCARGAR JSON PRODUCCION
+      // ==========================
+      if (jsonProdName && jsonProdB64) {
+        const jsonTextProd = atob(jsonProdB64);
+        const jsonBlobProd = new Blob(
+          [jsonTextProd],
+          { type: "application/json;charset=utf-8" }
+        );
+
+        const urlProd = URL.createObjectURL(jsonBlobProd);
+        const aProd = document.createElement("a");
+        aProd.href = urlProd;
+        aProd.download = jsonProdName;
+        document.body.appendChild(aProd);
+        aProd.click();
+        aProd.remove();
+        URL.revokeObjectURL(urlProd);
+      }
+    })
+
+
+    .catch(error => {
+      console.error(" Error:", error);
+      mostrarMensaje("danger", ` Ocurrio un error al guardar los datos o generar el documento. ${error.message ? "(" + error.message + ")" : ""}`);
+    })
+    .finally(() => { 
+      btn.prop("disabled", false).text("Generar Word"); 
+      bloqueandoEnvio = false; 
+    });
+  });
+});
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
