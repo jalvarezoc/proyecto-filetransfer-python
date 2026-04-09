@@ -34,12 +34,12 @@ H2H_TEMPLATE_FALLBACK = [
 ]
 H2H_DOWNLOAD_TEMPLATES_BY_TYPE = {
     "PGP_RENOVACION": [
-        ("PGP", "templates/plantilla_h2h_pgp_mis.docx"),
-        ("GENERAL", "templates/plantilla_h2h_pgp_fcd.docx"),
+        ("MIS", "templates/plantilla_h2h_pgp_mis.docx"),
+        ("FCD", "templates/plantilla_h2h_pgp_fcd.docx"),
     ],
     "OPENSSL_RENOVACION": [
-        ("OPENSSL", "templates/plantilla_h2h_openssl_mis.docx"),
-        ("GENERAL", "templates/plantilla_h2h_openssl_fcd.docx"),
+        ("MIS", "templates/plantilla_h2h_openssl_mis.docx"),
+        ("FCD", "templates/plantilla_h2h_openssl_fcd.docx"),
     ],
     "CAMBIO_CREDENCIALES": [
         ("CAMBIO_CREDENCIALES", "templates/plantilla_h2h.docx"),
@@ -493,7 +493,10 @@ def guardar_h2h():
         archivos = []
         for etiqueta, plantilla_path in plantillas_descarga:
             buffer = renderizar_documento_h2h(plantilla_path, context, datos)
-            nombre_archivo = f"SSFT-H2H-{datos['tipo_documento']}-{nombre_mvp}-{etiqueta}.docx"
+            if etiqueta in {"MIS", "FCD"}:
+                nombre_archivo = f"SSFT-{etiqueta}-{nombre_mvp}.docx"
+            else:
+                nombre_archivo = f"SSFT-H2H-{nombre_mvp}-{etiqueta}.docx"
             archivos.append(
                 {
                     "filename": nombre_archivo,
