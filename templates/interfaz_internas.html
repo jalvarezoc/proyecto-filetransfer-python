@@ -294,7 +294,7 @@
           <tr>
             <th>Ambiente</th>
             <th>Servidor</th>
-            <th>Ruta Origen</th>
+            <th class="col-ruta-origen">Ruta Origen</th>
             <th class="col-servidor-destino d-none">Servidor Destino</th>
             <th class="col-archivo-origen">Archivo Origen</th>
             <th class="col-ruta-destino">Ruta Destino</th>
@@ -417,6 +417,31 @@ $(document).ready(function () {
     return $("#tipoDocumento").val() === "WIND_TO_MAINF";
   }
 
+  function esTipoMainframePeerToPeerFijo() {
+    const tipoDocumento = $("#tipoDocumento").val();
+    return tipoDocumento === "WIND_TO_MAINF" || tipoDocumento === "MAINF_TO_WIND";
+  }
+
+  function requierePeerToPeerFijo() {
+    return esTipoMainframePeerToPeerFijo();
+  }
+
+  function esPeerToPeer() {
+    return $("#modalidad").val() === "Peer-to-Peer";
+  }
+
+  function sincronizarModalidadPorTipo() {
+    const modalidad = $("#modalidad");
+    if (requierePeerToPeerFijo()) {
+      modalidad.val("Peer-to-Peer").prop("disabled", true);
+      return;
+    }
+    if (modalidad.val() === "Peer-to-Peer") {
+      modalidad.val("CDPremium");
+    }
+    modalidad.prop("disabled", false);
+  }
+
   function requiereServidorDestino() {
     const tipoDocumento = $("#tipoDocumento").val();
     return (
@@ -441,10 +466,36 @@ $(document).ready(function () {
 
     const esMainfToWind = esMainframeAWindows();
     const esWindToMainf = esWindowsAMainframe();
+    const esPeerMainframe = esPeerToPeer() && (esMainfToWind || esWindToMainf);
     const mostrarServidorDestino = requiereServidorDestino();
+    const encabezadoRutaOrigen = $("#tablaTransferencias thead .col-ruta-origen");
     const encabezadoServidorDestino = $("#tablaTransferencias thead .col-servidor-destino");
     const encabezadoRutaDestino = $("#tablaTransferencias thead .col-ruta-destino");
     const encabezadoArchivoDestino = $("#tablaTransferencias thead .col-archivo-destino");
+
+    encabezadoRutaOrigen.removeClass("d-none").text(esPeerMainframe ? "Ruta Windows" : "Ruta Origen");
+    $("#tablaTransferencias tbody .td-ruta-origen").removeClass("d-none");
+    $("#tablaTransferencias thead .col-archivo-origen").toggleClass("d-none", esPeerMainframe);
+    $("#tablaTransferencias tbody .td-archivo-origen").toggleClass("d-none", esPeerMainframe);
+    encabezadoRutaDestino.toggleClass("d-none", esPeerMainframe);
+    $("#tablaTransferencias tbody .td-ruta-destino").toggleClass("d-none", esPeerMainframe);
+    encabezadoArchivoDestino.toggleClass("d-none", esPeerMainframe);
+    $("#tablaTransferencias tbody .td-archivo-destino").toggleClass("d-none", esPeerMainframe);
+
+    $("#tablaTransferencias tbody tr").each(function () {
+      $(this).find(".rutaOrigen").prop("required", true).removeClass("is-invalid");
+      $(this).find(".archivoOrigen, .rutaDestino, .archivoDestino").prop("required", !esPeerMainframe).removeClass("is-invalid");
+    });
+
+    if (esPeerMainframe) {
+      encabezadoServidorDestino.addClass("d-none");
+      $("#tablaTransferencias tbody .td-servidor-destino").addClass("d-none");
+      $("#tablaTransferencias tbody tr").each(function () {
+        $(this).find(".servidorDestino").prop("required", false).removeClass("is-invalid");
+        $(this).find(".rutaOrigen").attr("placeholder", "Ruta Windows");
+      });
+      return;
+    }
 
     if (esMainfToWind) {
       encabezadoServidorDestino.toggleClass("d-none", !mostrarServidorDestino);
@@ -456,6 +507,7 @@ $(document).ready(function () {
 
       $("#tablaTransferencias tbody tr").each(function () {
         const inputArchivoOrigen = $(this).find(".archivoOrigen");
+        const inputRutaOrigen = $(this).find(".rutaOrigen");
         const inputRutaDestino = $(this).find(".rutaDestino");
         const inputArchivoDestino = $(this).find(".archivoDestino");
         const inputServidorDestino = $(this).find(".servidorDestino");
@@ -465,6 +517,7 @@ $(document).ready(function () {
         }
 
         inputArchivoOrigen.prop("required", false).removeClass("is-invalid");
+        inputRutaOrigen.attr("placeholder", "Ruta Origen");
         inputServidorDestino
           .removeClass("is-invalid")
           .attr("placeholder", "Servidor Destino");
@@ -482,10 +535,12 @@ $(document).ready(function () {
     encabezadoArchivoDestino.text(esWindToMainf ? "Job" : "Archivo Destino");
 
     $("#tablaTransferencias tbody tr").each(function () {
+      const inputRutaOrigen = $(this).find(".rutaOrigen");
       const inputRutaDestino = $(this).find(".rutaDestino");
       const inputArchivoDestino = $(this).find(".archivoDestino");
       $(this).find(".servidorDestino").removeClass("is-invalid");
       $(this).find(".archivoOrigen").prop("required", true);
+      inputRutaOrigen.attr("placeholder", "Ruta Origen");
       inputRutaDestino.attr("placeholder", esWindToMainf ? "Dataset" : "Ruta Destino");
       inputArchivoDestino
         .prop("required", !esWindToMainf)
@@ -516,13 +571,13 @@ $(document).ready(function () {
     );
     const tdServidor = $("<td>").append($("<input>", { type: "text", class: "form-control servidor", placeholder: "Servidor (Ej. PFILED)", required: true }));
     // Orden cambiado: Ruta antes que Archivo
-    const tdRutaOrigen = $("<td>").append($("<input>", { type: "text", class: "form-control rutaOrigen", placeholder: "Ruta Origen" }));
+    const tdRutaOrigen = $("<td>").addClass("td-ruta-origen").append($("<input>", { type: "text", class: "form-control rutaOrigen", placeholder: "Ruta Origen" }));
     const tdServidorDestino = $("<td>").addClass("td-servidor-destino d-none").append(
       $("<input>", { type: "text", class: "form-control servidorDestino", placeholder: "Servidor Destino" })
     );
     const tdArchivoOrigen = $("<td>").addClass("td-archivo-origen").append($("<input>", { type: "text", class: "form-control archivoOrigen", placeholder: "Archivo Origen", required: true }));
-    const tdRutaDestino = $("<td>").append($("<input>", { type: "text", class: "form-control rutaDestino", placeholder: "Ruta Destino" }));
-    const tdArchivoDestino = $("<td>").append($("<input>", { type: "text", class: "form-control archivoDestino", placeholder: "Archivo Destino", required: true }));
+    const tdRutaDestino = $("<td>").addClass("td-ruta-destino").append($("<input>", { type: "text", class: "form-control rutaDestino", placeholder: "Ruta Destino" }));
+    const tdArchivoDestino = $("<td>").addClass("td-archivo-destino").append($("<input>", { type: "text", class: "form-control archivoDestino", placeholder: "Archivo Destino", required: true }));
     const tdAcciones = $("<td>").addClass("text-center").append(
       $("<button>", { class: "btn btn-warning btn-sm duplicarFila", title: "Duplicar", text: "+" }),
       $("<button>", { class: "btn btn-danger btn-sm eliminarFila", title: "Eliminar", text: "x" })
@@ -640,6 +695,7 @@ $(document).ready(function () {
 
   // 2 filas por defecto
   limpiarTransferenciasPorCambioTipo();
+  sincronizarModalidadPorTipo();
   actualizarTransferenciasPorTipo();
 
   $("#agregarFila").click(function () {
@@ -659,7 +715,12 @@ $(document).ready(function () {
   });
 
   $("#tipoDocumento").on("change", function () {
+    sincronizarModalidadPorTipo();
     limpiarTransferenciasPorCambioTipo();
+    actualizarTransferenciasPorTipo();
+  });
+
+  $("#modalidad").on("change", function () {
     actualizarTransferenciasPorTipo();
   });
 
@@ -889,6 +950,7 @@ $(document).ready(function () {
     } else {
       const transferencias = [];
       let incompletas = false;
+      const esPeerMainframe = esPeerToPeer() && (esMainframeAWindows() || esWindowsAMainframe());
 
       $("#tablaTransferencias tbody tr").each(function () {
         const esMainfToWind = esMainframeAWindows();
@@ -899,11 +961,11 @@ $(document).ready(function () {
           servidor: $(this).find(".servidor").val().trim(),
           servidorDestino: $(this).find(".servidorDestino").val().trim(),
           rutaOrigen: $(this).find(".rutaOrigen").val().trim(),
-          archivoOrigen: esMainfToWind ? nombreArchivo : $(this).find(".archivoOrigen").val().trim(),
-          rutaDestino: $(this).find(".rutaDestino").val().trim(),
-          archivoDestino: nombreArchivo
+          archivoOrigen: esPeerMainframe ? "" : (esMainfToWind ? nombreArchivo : $(this).find(".archivoOrigen").val().trim()),
+          rutaDestino: esPeerMainframe ? "" : $(this).find(".rutaDestino").val().trim(),
+          archivoDestino: esPeerMainframe ? "" : nombreArchivo
         };
-        if (pedirServidorDestino && !fila.servidorDestino) {
+        if (!esPeerMainframe && pedirServidorDestino && !fila.servidorDestino) {
           $(this).find(".servidorDestino").addClass("is-invalid");
           incompletas = true;
         } else {

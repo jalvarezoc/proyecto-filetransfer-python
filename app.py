@@ -48,11 +48,11 @@ H2H_DOWNLOAD_TEMPLATES_BY_TYPE = {
 INTERNAS_TEMPLATE_MATRIX = {
     "WIND_TO_MAINF": {
         "CDPremium": "templates/plantilla_windows_mainframe.docx",
-        "Peer-to-Peer": "templates/plantilla_windows_mainframe.docx",
+        "Peer-to-Peer": "templates/plantilla_windows_mainframe_p2p.docx",
     },
     "MAINF_TO_WIND": {
         "CDPremium": "templates/plantilla_mainframe_distribuido.docx",
-        "Peer-to-Peer": "templates/plantilla_internas.docx",
+        "Peer-to-Peer": "templates/plantilla_windows_mainframe_p2p.docx",
     },
     "WIND_MAINF_TO_MAINF_WIND": {
         "CDPremium": "templates/plantillas_win-mainf_main-win.docx",
@@ -111,6 +111,10 @@ INTERNAS_TEMPLATE_MAP = construir_mapa_plantillas_normalizado()
 def obtener_plantilla_internas(tipo_documento, modalidad):
     key = (normalizar_clave_plantilla(tipo_documento), normalizar_clave_plantilla(modalidad))
     return INTERNAS_TEMPLATE_MAP.get(key)
+
+
+def requiere_descarga_json_internas(tipo_documento):
+    return tipo_documento not in {"WIND_TO_MAINF", "MAINF_TO_WIND"}
 
 
 def generar_rules_por_ambiente(lista_transferencias, regla_base, usuario_ft):
@@ -668,12 +672,13 @@ def guardar_internas():
             download_name=output_filename,
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
-        # JSON VIAJA EN MEMORIA (NO DISCO)
-        response.headers["X-JSON-CERT-NAME"] = json_cert_name
-        response.headers["X-JSON-CERT-DATA"] = json_cert_b64
+        if requiere_descarga_json_internas(tipo_documento):
+            # JSON VIAJA EN MEMORIA (NO DISCO)
+            response.headers["X-JSON-CERT-NAME"] = json_cert_name
+            response.headers["X-JSON-CERT-DATA"] = json_cert_b64
 
-        response.headers["X-JSON-PROD-NAME"] = json_prod_name
-        response.headers["X-JSON-PROD-DATA"] = json_prod_b64
+            response.headers["X-JSON-PROD-NAME"] = json_prod_name
+            response.headers["X-JSON-PROD-DATA"] = json_prod_b64
         return response
     except Exception as e:
         print(f"Error en guardar_internas: {e}")
